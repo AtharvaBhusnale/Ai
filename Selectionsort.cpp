@@ -3,14 +3,17 @@
 using namespace std ;
 class Selection
 {
-	int arr[5] , size;
+	int arr[100] , size;
 
 	public :
 
 	void init()
 	{
 		int val;
-		for (int i=0 ; i<5 ; i++)
+		cout<<"Enter the size of array";
+		cin>>size ;
+		arr[size];
+		for (int i=0 ; i<size ; i++)
 		{
 			printf("Enter the value at %d :",i);
 			scanf("%d" , &val);
@@ -20,7 +23,7 @@ class Selection
 
 	void disp()
 	{
-		for (int i=0 ; i<5 ; i++)
+		for (int i=0 ; i<size ; i++)
 		{
 			
 			cout<<arr[i]<<" ";
@@ -31,10 +34,10 @@ class Selection
 	{
 		int min , temp;
 
-		for(int i=0 ; i<4 ; i++)
+		for(int i=0 ; i<size-1 ; i++)
 		{
 			min=i;
-			for (int j = i+1; j < 5; j++)
+			for (int j = i+1; j < size; j++)
 			{
 				if (arr[min]>=arr[j])
 					min=j ;
