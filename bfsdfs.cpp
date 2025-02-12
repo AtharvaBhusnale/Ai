@@ -112,7 +112,7 @@ class Graph
 
         while (front < rear) 
         {
-            int node = queue[front++]; // Dequeue
+            int node = queue[front++]; 
             printf("%c ",node+65);
 
            
@@ -120,7 +120,7 @@ class Graph
             {
                 if (adjMtx[node][i] == 1 && !visited[i]) 
                 {
-                    queue[rear++] = i; // Enqueue
+                    queue[rear++] = i; 
                     visited[i] = true;
                 }
             }
