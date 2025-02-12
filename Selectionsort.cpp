@@ -10,7 +10,7 @@ class Selection
 	void init()
 	{
 		int val;
-		cout<<"Enter the size of array";
+		cout<<"Enter the size of array :: ";
 		cin>>size ;
 		arr[size];
 		for (int i=0 ; i<size ; i++)
