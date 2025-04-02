@@ -21,6 +21,9 @@ class Graph
             for (int j = 0; j < size; j++) 
             {
                 adjMtx[i][j] = 0; //initialization of matirx values with zeros
+                if(adjMtx[i][j]==1)
+                    cout<<"Entered element other than 1";
+                    break;
             }
             visited[i] = false; //Initialize all the node to be not visited
         }
