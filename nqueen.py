@@ -1,74 +1,40 @@
-def createBoard():
-    board = []
-    dim = int(input("Enter Dimension : "))
-    for i in range(0 , dim):
-        row = []
-        for j in range(0 , dim):   
-            row.append(0)
-        board.append(row)
-    return board
+def board_position(n):
+    board = [-1] * n
+    solutions = []
+    solve_n_queens(board, 0, n, solutions)
+    print(f"\nTotal solutions found: {len(solutions)}")
     
-count = 0
-def showBoard(board):
-    global count
-    count += 1
-    print('\n', count)
-    for i in range(0 , len(board)):
-        for j in range(0 , len(board[i])):
-            if board[i][j]:
-                 print(f'{81:4c}', end = '')
-            else:
-                print(f'{46:4c}',  end = '')
-        print('\n')
-    print('\n\n')
-    
-def validate(board , row , column):
-    for i in range(0 , len(board)): #checking column
-        if board[i][column] == 1:
-            return False
-    
-    j =  column
-    for i in range(row , len(board)):
-        if j == len(board):
-            break
-        if board[i][j] == 1:
-            return False
-        j += 1
-    
-    j =  column
-    for i in range(row , -1 , -1):
-        if j < 0:
-            break
-        if board[i][j] == 1:
-            return False
-        j -= 1
-    
-    j =  column
-    for i in range(row , len(board)):
-        if j < 0:
-            break
-        if board[i][j] == 1:
-            return False
-        j -= 1
-    
-    j =  column
-    for i in range(row , -1 , -1):
-        if j == len(board):
-            break
-        if board[i][j] == 1:
-            return False
-        j += 1
-    return True
-    
-def permute(board, l , n):
-    if l == n:
-        showBoard(board)
-        return
-    for i in range(0 , n):
-        if validate(board , l , i):
-            board[l][i] = 1
-            permute(board , l + 1 , n)
-            board[l][i] = 0
+    for index, sol in enumerate(solutions, start=1):
+        print(f"\nSolution {index}:")
+        print_solution_matrix(sol, n)
 
-board = createBoard()
-permute(board, 0, len(board))
+def solve_n_queens(board, row, n, solutions):
+    if row == n:
+        solutions.append(board.copy())  # Save current valid configuration
+        return
+    
+    for col in range(n):
+        if safe_position(board, row, col):
+            board[row] = col
+            solve_n_queens(board, row + 1, n, solutions)
+            board[row] = -1  # Backtrack
+
+def safe_position(board, row, col):
+    for i in range(row):
+        if (board[i] == col or 
+            absolute_value(board[i] - col) == absolute_value(i - row)):
+            return False
+    return True
+
+def absolute_value(x):
+    return x if x >= 0 else -x
+
+def print_solution_matrix(solution, n):
+    for row in range(n):
+        line = ""
+        for col in range(n):
+            line += "Q " if solution[row] == col else ". "
+        print(line)
+        
+num=int(input("Enter the size of matrix"))
+board_position(num)
