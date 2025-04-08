@@ -27,8 +27,7 @@ def solve_n_queens(board, row, n, solutions):
 def safe_position(board, row, col):
     for i in range(row):
         # Check if same column or same diagonal
-        if (board[i] == col or 
-            absolute_value(board[i] - col) == absolute_value(i - row)):
+        if (board[i] == col or absolute_value(board[i] - col) == absolute_value(i - row)):
             return False  # Conflict with another queen
     return True  # Safe to place
 
