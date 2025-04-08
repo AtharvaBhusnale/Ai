@@ -23,11 +23,6 @@ def showBoard(board):
     print('\n\n')
     
 def validate(board , row , column):
-    '''
-    for i in range(0 , len(board)): #checking row
-        if board[row][i] == 1:
-            return False
-    '''
     for i in range(0 , len(board)): #checking column
         if board[i][column] == 1:
             return False
