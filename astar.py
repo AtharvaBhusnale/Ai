@@ -1,65 +1,58 @@
-import heapq
+# Pretty print the 8-puzzle matrix
+def print_puzzle(state, level, heuristic):
+    print(f"\n------ Level {level} ------")
+    for i in range(0, 9, 3):
+        print(state[i], state[i+1], state[i+2])
+    print(f"Heuristic (Misplaced Tiles): {heuristic}")
 
-# Goal state as a tuple
-goal = (1,2,3,4,5,6,7,8,0)
+# Heuristic: Count misplaced tiles
+def misplaced_tiles(state):
+    goal = [1, 2, 3, 8,0, 4, 7, 6, 5]       
+    count = 0
+    for i in range(9):
+        # Only count if tile is non-zero and in wrong position
+        if state[i] != 0 and state[i] != goal[i]:
+            count += 1
+    return count
 
-# Moves: up, down, left, right
-moves = {
-    0: [1, 3],
-    1: [0,2,4],
-    2: [1,5],
-    3: [0,4,6],
-    4: [1,3,5,7],
-    5: [2,4,8],
-    6: [3,7],
-    7: [4,6,8],
-    8: [5,7]
-}
+# Find best move based on heuristic
+def best_move(state, visited):
+    zero = state.index(0)
+    move_map = {
+        0: [1,3], 1: [0,2,4], 2: [1,5],
+        3: [0,4,6], 4: [1,3,5,7], 5: [2,4,8],
+        6: [3,7], 7: [4,6,8], 8: [5,7]
+    }
+    best = None     #best state to move to
+    best_h = float('inf') #best heuristic value
 
-def heuristic(state):
-    """Manhattan distance"""
-    distance = 0
-    for i, value in enumerate(state):
-        if value != 0:
-            goal_pos = goal.index(value)
-            distance += abs(i // 3 - goal_pos // 3) + abs(i % 3 - goal_pos % 3)
-    return distance
+    for move in move_map[zero]:
+        new_state = state.copy()
+        new_state[zero], new_state[move] = new_state[move], new_state[zero]
+        if tuple(new_state) in visited:
+            continue
+        h = misplaced_tiles(new_state)
+        if h < best_h:
+            best, best_h = new_state, h
 
-def a_star(start):
-    heap = []
-    heapq.heappush(heap, (heuristic(start), 0, start, []))  # (priority, cost, state, path)
-    visited = set()
+    return best, best_h
 
-    while heap:
-        priority, cost, state, path = heapq.heappop(heap)
+# -------- Main Program --------
+initial = [2,8,3,1,6,4,7,0,5]  # Initial state of the puzzle
+state = initial
+visited = {tuple(state)}
+level = 0
+heuristic = misplaced_tiles(state)
 
-        if state == goal:
-            return path + [state]
+print_puzzle(state, level, heuristic)
 
-        visited.add(state)
-
-        zero = state.index(0)
-        for move in moves[zero]:
-            new_state = list(state)
-            new_state[zero], new_state[move] = new_state[move], new_state[zero]
-            new_state = tuple(new_state)
-
-            if new_state not in visited:
-                heapq.heappush(heap, (cost + 1 + heuristic(new_state), cost + 1, new_state, path + [state]))
-
-    return None
-
-# Example
-start = (1,2,3,4,0,6,7,5,8)
-
-solution = a_star(start)
-
-if solution:
-    print("Steps to solve:")
-    for step in solution:
-        print(step[0:3])
-        print(step[3:6])
-        print(step[6:9])
-        print()
-else:
-    print("No solution found.")
+while heuristic > 0:
+    next_state, next_h = best_move(state, visited)
+    if not next_state:
+        print("\n❌ No better move found. Stuck at local minimum!")
+        break
+    level += 1
+    state = next_state
+    heuristic = next_h
+    visited.add(tuple(state))
+    print_puzzle(state, level, heuristic)
